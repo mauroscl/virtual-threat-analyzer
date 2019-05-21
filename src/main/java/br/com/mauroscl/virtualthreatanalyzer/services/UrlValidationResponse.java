@@ -10,16 +10,17 @@ public class UrlValidationResponse {
   protected UrlValidationResponse() {
   }
 
-  protected UrlValidationResponse(String regex) {
+  protected UrlValidationResponse(int correlationId) {
     final Random random = new Random();
 
     this.match = random.nextBoolean();
-    this.correlationId = random.nextInt();
-
-    this.regex = regex;
+    this.correlationId = correlationId;
+    byte[] bytesForString = new byte[]{};
+    random.nextBytes(bytesForString);
+    this.regex = new String(bytesForString);
   }
 
-  protected boolean isMatch() {
+  public boolean isMatch() {
     return match;
   }
 
@@ -27,7 +28,7 @@ public class UrlValidationResponse {
     this.match = match;
   }
 
-  protected String getRegex() {
+  public String getRegex() {
     return regex;
   }
 
@@ -35,7 +36,7 @@ public class UrlValidationResponse {
     this.regex = regex;
   }
 
-  protected int getCorrelationId() {
+  public int getCorrelationId() {
     return correlationId;
   }
 

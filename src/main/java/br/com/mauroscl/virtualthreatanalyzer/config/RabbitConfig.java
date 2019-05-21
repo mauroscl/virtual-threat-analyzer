@@ -1,6 +1,7 @@
 package br.com.mauroscl.virtualthreatanalyzer.config;
 
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -11,33 +12,36 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-  @Value("${whitelist-config.insertion-queue.name}")
-  private String insertionQueueName;
+  @Value("${whitelist-config.insertion-queue}")
+  private String insertionQueue;
 
-  @Value("${whitelist-config.validation-queue.name}")
-  private String validationQueueName;
+  @Value("${whitelist-config.validation-queue}")
+  private String validationQueue;
 
-//  @Value("{whitelist-config.topic.name}")
-//  private String topicExchangeName;
+  @Value("${whitelist-config.response-exchange}")
+  private String responseExchange;
 
   @Bean
   Queue insertionQueue() {
-    return new Queue(insertionQueueName);
+    return new Queue(insertionQueue);
+  }
+
+  @Bean
+  Queue validationQueue() {
+    return new Queue(validationQueue);
+  }
+
+  @Bean
+  TopicExchange exchange() {
+    return new TopicExchange(responseExchange);
   }
 
 //  @Bean
-//  Queue validationQueue() {
-//    return new Queue(validationQueueName);
-//  }
-
-//  @Bean
-//  TopicExchange exchange() {
-//    return new TopicExchange(topicExchangeName);
-//  }
-//
-//  @Bean
-//  Binding binding(Queue queue, TopicExchange exchange) {
-//    return BindingBuilder.bind(queue).to(exchange).with("foo.bar.#");
+//  Binding binding( Queue queue, TopicExchange exchange) {
+//    return BindingBuilder
+//        .bind(queue)
+//        .to(exchange)
+//        .with(responseRoutingKey);
 //  }
 
 //  @Bean
@@ -45,7 +49,7 @@ public class RabbitConfig {
 //      MessageListenerAdapter listenerAdapter) {
 //    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
 //    container.setConnectionFactory(connectionFactory);
-//    container.setQueueNames(insertionQueueName);
+//    container.setQueueNames(insertionQueue);
 //    container.setMessageListener(listenerAdapter);
 //    return container;
 //  }
