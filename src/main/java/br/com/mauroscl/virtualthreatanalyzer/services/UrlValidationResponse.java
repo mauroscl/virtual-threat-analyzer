@@ -15,9 +15,15 @@ public class UrlValidationResponse {
 
     this.match = random.nextBoolean();
     this.correlationId = correlationId;
-    byte[] bytesForString = new byte[]{};
-    random.nextBytes(bytesForString);
-    this.regex = new String(bytesForString);
+    this.regex = generateString(30, random);
+  }
+
+  private String generateString(int tamanho, Random random) {
+    final char[] chars = new char[tamanho];
+    for (int i = 0 ; i < chars.length ; i++) {
+      chars[i] = (char) (random.nextInt(122-97 + 1) + 97);
+    }
+    return new String(chars);
   }
 
   public boolean isMatch() {

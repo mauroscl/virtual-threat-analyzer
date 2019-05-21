@@ -1,10 +1,13 @@
 package br.com.mauroscl.virtualthreatanalyzer.config;
 
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +24,12 @@ public class RabbitConfig {
   @Value("${whitelist-config.response-exchange}")
   private String responseExchange;
 
+  @Value("response-queue")
+  private String responseQueue;
+
+  @Value("${whitelist-config.response-routing-key}")
+  private String responseRoutingKey;
+
   @Bean
   Queue insertionQueue() {
     return new Queue(insertionQueue);
@@ -32,17 +41,23 @@ public class RabbitConfig {
   }
 
   @Bean
+  Queue responseQueue() {
+    return new Queue(responseQueue);
+  }
+
+
+  @Bean
   TopicExchange exchange() {
     return new TopicExchange(responseExchange);
   }
 
-//  @Bean
-//  Binding binding( Queue queue, TopicExchange exchange) {
-//    return BindingBuilder
-//        .bind(queue)
-//        .to(exchange)
-//        .with(responseRoutingKey);
-//  }
+  @Bean
+  Binding binding(Queue responseQueue, TopicExchange exchange) {
+    return BindingBuilder
+        .bind(responseQueue)
+        .to(exchange)
+        .with(responseRoutingKey);
+  }
 
 //  @Bean
 //  SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
