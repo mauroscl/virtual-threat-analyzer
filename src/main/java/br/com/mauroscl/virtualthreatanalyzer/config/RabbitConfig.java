@@ -1,13 +1,15 @@
 package br.com.mauroscl.virtualthreatanalyzer.config;
 
+import br.com.mauroscl.virtualthreatanalyzer.services.ValidationConsumer;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,20 +17,23 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-  @Value("${whitelist-config.insertion-queue}")
+  @Value("${vta-config.insertion-queue}")
   private String insertionQueue;
 
-  @Value("${whitelist-config.validation-queue}")
+  @Value("${vta-config.validation-queue}")
   private String validationQueue;
 
-  @Value("${whitelist-config.response-exchange}")
+  @Value("${vta-config.response-exchange}")
   private String responseExchange;
 
   @Value("response-queue")
   private String responseQueue;
 
-  @Value("${whitelist-config.response-routing-key}")
+  @Value("${vta-config.response-routing-key}")
   private String responseRoutingKey;
+
+  @Value("${vta-config.number-of-validation-consumers}")
+  private int numberOfValidationConsumers;
 
   @Bean
   Queue insertionQueue() {
@@ -59,21 +64,21 @@ public class RabbitConfig {
         .with(responseRoutingKey);
   }
 
-//  @Bean
-//  SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
-//      MessageListenerAdapter listenerAdapter) {
-//    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-//    container.setConnectionFactory(connectionFactory);
-//    container.setQueueNames(insertionQueue);
-//    container.setMessageListener(listenerAdapter);
-//    return container;
-//  }
-//
-//  @Bean
-//  MessageListenerAdapter listenerAdapter(Receiver receiver) {
-//    return new MessageListenerAdapter(receiver, "receiveMessage");
-//  }
+  @Bean
+  SimpleMessageListenerContainer validationContainer(ConnectionFactory connectionFactory/*,
+      MessageListenerAdapter validationListenerAdapter*/) {
+    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+    container.setConnectionFactory(connectionFactory);
+    container.setQueueNames(validationQueue);
+    //container.setConcurrentConsumers(numberOfValidationConsumers);
+    //container.setMessageListener(validationListenerAdapter);
+    return container;
+  }
 
+//  @Bean
+//  MessageListenerAdapter validationListenerAdapter(ValidationConsumer validationConsumer) {
+//    return new MessageListenerAdapter(validationConsumer, "receive");
+//  }
 
   @Bean
   public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {

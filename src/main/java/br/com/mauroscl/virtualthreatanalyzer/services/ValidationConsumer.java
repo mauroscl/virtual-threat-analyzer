@@ -15,14 +15,10 @@ public class ValidationConsumer {
     this.producer = producer;
   }
 
-  @RabbitListener(queues = {"${whitelist-config.validation-queue}"})
+  @RabbitListener(queues = {"${vta-config.validation-queue}"},concurrency = "${vta-config.number-of-validation-consumers}")
   public void receive(ValidationCommand command) {
     logger.info("nova validação: " + command.toString());
     producer.send(new UrlValidationResponse(command.getCorrelationId()));
   }
-
-//  public void receive(@Payload String order) {
-//    logger.info("Order: " + order);
-//  }
 
 }
