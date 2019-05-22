@@ -32,8 +32,8 @@ public class RabbitConfig {
   @Value("${vta-config.response-routing-key}")
   private String responseRoutingKey;
 
-  @Value("${vta-config.number-of-validation-consumers}")
-  private int numberOfValidationConsumers;
+//  @Value("${vta-config.number-of-validation-consumers}")
+//  private int numberOfValidationConsumers;
 
   @Bean
   Queue insertionQueue() {
@@ -64,16 +64,16 @@ public class RabbitConfig {
         .with(responseRoutingKey);
   }
 
-  @Bean
-  SimpleMessageListenerContainer validationContainer(ConnectionFactory connectionFactory/*,
-      MessageListenerAdapter validationListenerAdapter*/) {
-    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-    container.setConnectionFactory(connectionFactory);
-    container.setQueueNames(validationQueue);
-    //container.setConcurrentConsumers(numberOfValidationConsumers);
-    //container.setMessageListener(validationListenerAdapter);
-    return container;
-  }
+//  @Bean
+//  SimpleMessageListenerContainer validationContainer(ConnectionFactory connectionFactory/*,
+//      MessageListenerAdapter validationListenerAdapter*/) {
+//    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+//    container.setConnectionFactory(connectionFactory);
+//    container.setQueueNames(validationQueue);
+//    //container.setConcurrentConsumers(numberOfValidationConsumers);
+//    //container.setMessageListener(validationListenerAdapter);
+//    return container;
+//  }
 
 //  @Bean
 //  MessageListenerAdapter validationListenerAdapter(ValidationConsumer validationConsumer) {
