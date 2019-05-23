@@ -30,7 +30,7 @@ public class WhiteListRule {
     this.regex = regex;
   }
 
-  protected String getRegex() {
+  public String getRegex() {
     return regex;
   }
 
