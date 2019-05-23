@@ -12,17 +12,21 @@ import javax.persistence.Id;
 public class WhiteListRule {
   @Id
   @GeneratedValue(strategy= GenerationType.AUTO)
-  private Integer id;
+  private Long id;
 
   private String client;
 
   private String regex;
 
-  protected void setClient(final String client) {
+  public Long getId() {
+    return id;
+  }
+
+  public void setClient(final String client) {
     this.client = client;
   }
 
-  protected void setRegex(final String regex) {
+  public void setRegex(final String regex) {
     this.regex = regex;
   }
 
