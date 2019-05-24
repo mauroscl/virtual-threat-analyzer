@@ -5,9 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-//@ToString
-//@Setter
-//@Getter
 @Entity
 public class WhiteListRule {
   @Id
@@ -22,16 +19,16 @@ public class WhiteListRule {
     return id;
   }
 
+  public String getRegex() {
+    return regex;
+  }
+
   public void setClient(final String client) {
     this.client = client;
   }
 
   public void setRegex(final String regex) {
     this.regex = regex;
-  }
-
-  public String getRegex() {
-    return regex;
   }
 
   @Override
