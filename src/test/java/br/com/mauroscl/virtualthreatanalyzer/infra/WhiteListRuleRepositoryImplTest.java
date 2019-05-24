@@ -36,16 +36,6 @@ class WhiteListRuleRepositoryImplTest {
   }
 
   @Test
-  void deveRetornarRegrasGlobais() {
-    inserirRegrasParaConsulta();
-
-    final List<WhiteListRule> globalRules = repository.findGlobalRules();
-    assertThat(globalRules.size()).isEqualTo(1);
-    assertThat(globalRules.get(0).getRegex()).isEqualTo("xxx");
-
-  }
-
-  @Test
   public void deveRetornarRegrasDisponiveisParaUmCliente() {
     inserirRegrasParaConsulta();
     final List<WhiteListRule> rules = repository.findRulesAvailableForClient("mauro");

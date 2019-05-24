@@ -1,7 +1,7 @@
 package br.com.mauroscl.virtualthreatanalyzer.infra;
 
-import br.com.mauroscl.virtualthreatanalyzer.services.WhiteListRuleRepository;
 import br.com.mauroscl.virtualthreatanalyzer.services.WhiteListRule;
+import br.com.mauroscl.virtualthreatanalyzer.services.WhiteListRuleRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,11 +19,6 @@ public class WhiteListRuleRepositoryImpl implements WhiteListRuleRepository {
   @Override
   public List<WhiteListRule> findRulesAvailableForClient(final String client) {
     return internalRepository.findByClientOrClientIsNull(client);
-  }
-
-  @Override
-  public List<WhiteListRule> findGlobalRules() {
-    return internalRepository.findByClientIsNull();
   }
 
   @Override

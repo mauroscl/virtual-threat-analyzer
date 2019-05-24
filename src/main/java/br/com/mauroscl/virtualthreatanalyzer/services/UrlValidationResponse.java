@@ -7,8 +7,24 @@ public class UrlValidationResponse {
   private String regex;
   private int correlationId;
 
-  protected UrlValidationResponse() {
+  private UrlValidationResponse() {
   }
+
+  public static UrlValidationResponse forMatch(int correlationId, String regex) {
+    final UrlValidationResponse response = new UrlValidationResponse();
+    response.match = true;
+    response.correlationId = correlationId;
+    response.regex = regex;
+    return response;
+  }
+
+  public static UrlValidationResponse forUnmatch(int correlationId) {
+    final UrlValidationResponse response = new UrlValidationResponse();
+    response.match = false;
+    response.correlationId = correlationId;
+    return response;
+  }
+
 
   protected UrlValidationResponse(int correlationId) {
     final Random random = new Random();
