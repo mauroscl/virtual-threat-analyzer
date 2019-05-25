@@ -16,11 +16,11 @@ public class UrlValidationServiceImpl implements UrlValidationService {
   @Override
   public UrlValidationResponse validar(ValidationCommand command) {
 
-    List<WhiteListRule> rules = repository.findRulesAvailableForClient(command.getClient());
+    List<String> rules = repository.findRulesAvailableForClient(command.getClient());
 
-    return rules.parallelStream().filter(r -> command.getUrl().matches(r.getRegex()))
+    return rules.parallelStream().filter(command.getUrl()::matches)
         .findFirst()
-        .map(rule -> UrlValidationResponse.forMatch(command.getCorrelationId(), rule.getRegex()))
+        .map(rule -> UrlValidationResponse.forMatch(command.getCorrelationId(), rule))
         .orElse(UrlValidationResponse.forUnmatch(command.getCorrelationId()));
 
   }

@@ -17,7 +17,7 @@ public class WhiteListRuleRepositoryImpl implements WhiteListRuleRepository {
   }
 
   @Override
-  public List<WhiteListRule> findRulesAvailableForClient(final String client) {
+  public List<String> findRulesAvailableForClient(final String client) {
     return internalRepository.findByClientOrClientIsNull(client);
   }
 

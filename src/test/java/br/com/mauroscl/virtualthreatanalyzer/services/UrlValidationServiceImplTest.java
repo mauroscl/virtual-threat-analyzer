@@ -24,17 +24,14 @@ class UrlValidationServiceImplTest {
   private WhiteListRuleRepository repository;
 
   @BeforeEach
-  void prepareRepository() {
-    final WhiteListRule whiteListRule = new WhiteListRule();
+  void mockRepository() {
 
-    whiteListRule.setRegex(REGEX);
     when(repository.findRulesAvailableForClient(anyString()))
-        .thenReturn(Collections.singletonList(whiteListRule));
+        .thenReturn(Collections.singletonList(REGEX));
   }
 
   @Test
   void deveRetornarMatchQuandoUrlEstiverNaWhiteList(){
-
     final ValidationCommand validationCommand = new ValidationCommand();
     validationCommand.setClient("mauro");
     validationCommand.setUrl("www.axur.com");
@@ -44,7 +41,6 @@ class UrlValidationServiceImplTest {
     assertThat(response.getCorrelationId()).isEqualTo(1234);
     assertThat(response.isMatch()).isTrue();
     assertThat(response.getRegex()).isEqualTo(REGEX);
-
   }
 
   @Test
@@ -58,7 +54,6 @@ class UrlValidationServiceImplTest {
     assertThat(response.getCorrelationId()).isEqualTo(1234);
     assertThat(response.isMatch()).isFalse();
     assertThat(response.getRegex()).isNull();
-
   }
 
 }
