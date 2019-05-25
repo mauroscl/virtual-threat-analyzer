@@ -3,8 +3,10 @@ package br.com.mauroscl.virtualthreatanalyzer.services;
 import br.com.mauroscl.virtualthreatanalyzer.infra.WhiteListRuleRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class UrlValidationServiceImpl implements UrlValidationService {
 
   private final WhiteListRuleRepository repository;
