@@ -19,10 +19,6 @@ public class WhiteListRule {
     return id;
   }
 
-  public String getRegex() {
-    return regex;
-  }
-
   public void setClient(final String client) {
     this.client = client;
   }
