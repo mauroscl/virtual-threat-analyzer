@@ -1,5 +1,6 @@
 package br.com.mauroscl.virtualthreatanalyzer.services;
 
+import br.com.mauroscl.virtualthreatanalyzer.infra.WhiteListRuleRepository;
 import java.util.logging.Logger;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;

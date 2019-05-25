@@ -2,33 +2,23 @@ package br.com.mauroscl.virtualthreatanalyzer.infra;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import br.com.mauroscl.virtualthreatanalyzer.services.ValidationConsumer;
 import br.com.mauroscl.virtualthreatanalyzer.services.WhiteListRule;
-import br.com.mauroscl.virtualthreatanalyzer.services.WhiteListRuleRepository;
 import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 
-@SpringBootTest
-@ExtendWith(SpringExtension.class)
+@DataJpaTest
 @ActiveProfiles("test")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-@EnableAutoConfiguration(exclude = RabbitAutoConfiguration.class)
-class WhiteListRuleRepositoryImplTest {
+class WhiteListRuleRepositoryTest {
 
-  @MockBean
-  private RabbitTemplate rabbitTemplate;
+  @Autowired
+  private EntityManager entityManager;
 
   @Autowired
   private WhiteListRuleRepository repository;
@@ -70,13 +60,13 @@ class WhiteListRuleRepositoryImplTest {
     final WhiteListRule globalRule = new WhiteListRule();
     globalRule.setRegex("xxx");
 
-    repository.save(globalRule);
+    entityManager.persist(globalRule);
 
     final WhiteListRule clientRule = new WhiteListRule();
     clientRule.setClient("mauro");
     clientRule.setRegex("yyy");
 
-    repository.save(clientRule);
+    entityManager.persist(clientRule);
   }
 
 }
