@@ -2,6 +2,7 @@ package br.com.mauroscl.virtualthreatanalyzer.services;
 
 import br.com.mauroscl.virtualthreatanalyzer.infra.WhiteListRuleRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +20,20 @@ public class UrlValidationServiceImpl implements UrlValidationService {
   @Override
   public UrlValidationResponse validar(ValidationCommand command) {
 
-    List<String> rules = repository.findRulesAvailableForClient(command.getClient());
-
-    return rules.parallelStream().filter(command.getUrl()::matches)
-        .findFirst()
+    return findRule(repository.findRulesAvailableForClient(command.getClient()), command.getUrl())
         .map(rule -> UrlValidationResponse.forMatch(command.getCorrelationId(), rule))
-        .orElse(UrlValidationResponse.forUnmatch(command.getCorrelationId()));
+        .orElseGet(
+            () -> findRule(repository.findGlobalRules(), command.getUrl())
+                .map(rule -> UrlValidationResponse.forMatch(command.getCorrelationId(), rule))
+                .orElseGet(() -> UrlValidationResponse.forUnmatch(command.getCorrelationId())));
 
   }
+
+  private Optional<String> findRule(List<WhiteListRule> availableRules, String url) {
+    return availableRules
+        .parallelStream()
+        .map(WhiteListRule::getRegex)
+        .filter(url::matches).findFirst();
+  }
+
 }

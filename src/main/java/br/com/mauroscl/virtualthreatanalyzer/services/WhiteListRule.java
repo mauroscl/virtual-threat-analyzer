@@ -13,6 +13,10 @@ public class WhiteListRule {
 
   private String client;
 
+  protected String getRegex() {
+    return regex;
+  }
+
   private String regex;
 
   public Long getId() {
@@ -31,4 +35,5 @@ public class WhiteListRule {
   public String toString() {
     return "WhiteListRule{" + "client='" + client + '\'' + ", regex='" + regex + '\'' + '}';
   }
+
 }
