@@ -36,14 +36,14 @@ class WhiteListRuleRepositoryTest {
   }
 
   @Test
-  public void deveRetornarRegrasDisponiveisParaUmCliente() {
+  void deveRetornarRegrasDisponiveisParaUmCliente() {
     inserirRegrasParaConsulta();
     final List<String> rules = repository.findRulesAvailableForClient("mauro");
     assertThat(rules.size()).isEqualTo(2);
   }
 
   @Test
-  public void naoDeveRetornarRegrasParaClienteNaoCadastrado() {
+  void naoDeveRetornarRegrasParaClienteNaoCadastrado() {
     final WhiteListRule rule = new WhiteListRule();
     rule.setClient("mauro");
     rule.setRegex("xxx");
@@ -55,6 +55,33 @@ class WhiteListRuleRepositoryTest {
     assertThat(rules).isEmpty();
 
   }
+
+  @Test
+  void findByClientAndUrl_mustReturnMatch() {
+    final WhiteListRule rule = new WhiteListRule();
+    rule.setClient("mauro");
+    rule.setRegex("^w{3}\\.axur\\.\\w{2,3}[\\.\\w{0-2}]*$");
+
+    entityManager.persist(rule);
+
+    assertThat(repository
+        .findByClientAndUrl("mauro", "www.axur.com"))
+        .isNotEmpty();
+  }
+
+  @Test
+  void findByClientAndUrl_mustReturnUnmatch() {
+    final WhiteListRule rule = new WhiteListRule();
+    rule.setClient("mauro");
+    rule.setRegex("^w{3}\\.axur\\.\\w{2,3}[\\.\\w{0-2}]*$");
+
+    entityManager.persist(rule);
+
+    assertThat(repository
+        .findByClientAndUrl("mauro", "ww2.axur.com"))
+        .isEmpty();
+  }
+
 
   private void inserirRegrasParaConsulta() {
     final WhiteListRule globalRule = new WhiteListRule();
