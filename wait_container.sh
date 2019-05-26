@@ -13,3 +13,4 @@ waitforresponse()
 }
 
 waitforresponse $RABBITMQ_HOST $RABBITMQ_PORT
+java -Dspring.profiles.active=production -jar /app.jar
