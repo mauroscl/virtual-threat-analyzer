@@ -11,8 +11,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 public class RabbitConfig {
+
+  private static final String DEAD_LETTER_QUEUE = "dead-letter-queue";
+  private static final String DEAD_LETTER_EXCHANGE = "dead-letter-exchange";
 
   @Value("${vta-config.insertion-queue}")
   private String insertionQueue;
@@ -23,30 +29,28 @@ public class RabbitConfig {
   @Value("${vta-config.response-exchange}")
   private String responseExchange;
 
-  @Value("response-queue")
-  private String responseQueue;
-
   @Value("${vta-config.response-routing-key}")
   private String responseRoutingKey;
 
-//  @Value("${vta-config.number-of-validation-consumers}")
-//  private int numberOfValidationConsumers;
+  @Bean
+  Queue deadLetterQueue() {
+    return new Queue(DEAD_LETTER_QUEUE);
+  }
 
   @Bean
   Queue insertionQueue() {
-    return new Queue(insertionQueue);
+    return new Queue(insertionQueue, true,false, false, generateDeadLetterConfig());
   }
 
   @Bean
   Queue validationQueue() {
-    return new Queue(validationQueue);
+    return new Queue(validationQueue, true,false, false, generateDeadLetterConfig());
   }
 
-  @Bean
-  Queue responseQueue() {
-    return new Queue(responseQueue);
-  }
-
+//  @Bean
+//  Queue responseQueue() {
+//    return new Queue(responseQueue);
+//  }
 
   @Bean
   TopicExchange exchange() {
@@ -54,11 +58,14 @@ public class RabbitConfig {
   }
 
   @Bean
-  Binding binding(Queue responseQueue, TopicExchange exchange) {
-    return BindingBuilder
-        .bind(responseQueue)
-        .to(exchange)
-        .with(responseRoutingKey);
+  TopicExchange deadLetterExchange() {
+    return new TopicExchange(DEAD_LETTER_EXCHANGE);
+  }
+
+  @Bean
+  Binding bindingDeadLetter(Queue deadLetterQueue, TopicExchange deadLetterExchange)
+  {
+    return BindingBuilder.bind(deadLetterQueue).to(deadLetterExchange).with(DEAD_LETTER_QUEUE);
   }
 
 //  @Bean
@@ -87,5 +94,14 @@ public class RabbitConfig {
   @Bean
   public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
     return new Jackson2JsonMessageConverter();
+  }
+
+  private Map<String, Object> generateDeadLetterConfig() {
+
+    Map<String, Object> args = new HashMap<>();
+    args.put("x-dead-letter-exchange", DEAD_LETTER_EXCHANGE);
+    args.put("x-dead-letter-routing-key", DEAD_LETTER_QUEUE);
+
+    return args;
   }
 }
