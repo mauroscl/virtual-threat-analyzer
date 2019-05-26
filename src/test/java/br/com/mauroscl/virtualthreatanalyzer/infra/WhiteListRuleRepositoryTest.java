@@ -39,7 +39,7 @@ class WhiteListRuleRepositoryTest {
   public void deveRetornarRegrasDisponiveisParaUmCliente() {
     inserirRegrasParaConsulta();
     final List<String> rules = repository.findRulesAvailableForClient("mauro");
-    assertThat(rules.size()).isEqualTo(2);
+    assertThat(rules.size()).isEqualTo(1);
   }
 
   @Test
