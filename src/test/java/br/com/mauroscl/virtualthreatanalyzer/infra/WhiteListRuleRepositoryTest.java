@@ -38,7 +38,7 @@ class WhiteListRuleRepositoryTest {
   @Test
   public void deveRetornarRegrasDisponiveisParaUmCliente() {
     inserirRegrasParaConsulta();
-    final List<WhiteListRule> rules = repository.findRulesAvailableForClient("mauro");
+    final List<String> rules = repository.findRulesAvailableForClient("mauro");
     assertThat(rules.size()).isEqualTo(2);
   }
 
@@ -50,7 +50,7 @@ class WhiteListRuleRepositoryTest {
 
     repository.save(rule);
 
-    final List<WhiteListRule> rules = repository.findRulesAvailableForClient("joao");
+    final List<String> rules = repository.findRulesAvailableForClient("joao");
 
     assertThat(rules).isEmpty();
 

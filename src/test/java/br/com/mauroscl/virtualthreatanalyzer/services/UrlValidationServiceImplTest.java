@@ -27,10 +27,8 @@ class UrlValidationServiceImplTest {
   @BeforeEach
   void mockRepository() {
 
-    final WhiteListRule whiteListRule = new WhiteListRule();
-    whiteListRule.setRegex(REGEX);
     when(repository.findRulesAvailableForClient(anyString()))
-        .thenReturn(Collections.singletonList(whiteListRule));
+        .thenReturn(Collections.singletonList(REGEX));
   }
 
   @Test

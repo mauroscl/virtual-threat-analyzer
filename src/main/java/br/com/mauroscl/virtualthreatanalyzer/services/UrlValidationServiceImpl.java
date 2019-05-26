@@ -29,10 +29,9 @@ public class UrlValidationServiceImpl implements UrlValidationService {
 
   }
 
-  private Optional<String> findRule(List<WhiteListRule> availableRules, String url) {
+  private Optional<String> findRule(List<String> availableRules, String url) {
     return availableRules
         .parallelStream()
-        .map(WhiteListRule::getRegex)
         .filter(url::matches).findFirst();
   }
 

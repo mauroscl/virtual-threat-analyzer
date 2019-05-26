@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface WhiteListRuleRepository extends JpaRepository<WhiteListRule, Long> {
-  @Query("select w from WhiteListRule w where w.client = ?1")
+  @Query("select regex from WhiteListRule where client = ?1")
   @Cacheable(value = "clientRules", key = "#client")
-  List<WhiteListRule> findRulesAvailableForClient(String client);
+  List<String> findRulesAvailableForClient(String client);
 
-  @Query("select w from WhiteListRule w where w.client is null")
+  @Query("select regex from WhiteListRule where client is null")
   @Cacheable(value = "globalRules")
-  List<WhiteListRule> findGlobalRules();
+  List<String> findGlobalRules();
 }
