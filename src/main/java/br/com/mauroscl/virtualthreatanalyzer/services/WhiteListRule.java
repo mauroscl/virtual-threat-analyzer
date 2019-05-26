@@ -13,14 +13,14 @@ public class WhiteListRule {
 
   private String client;
 
-  protected String getRegex() {
-    return regex;
-  }
-
   private String regex;
 
   public Long getId() {
     return id;
+  }
+
+  public String getClient() {
+    return client;
   }
 
   public void setClient(final String client) {
