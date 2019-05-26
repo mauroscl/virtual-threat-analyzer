@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import br.com.mauroscl.virtualthreatanalyzer.infra.WhiteListRuleRepository;
 import java.util.Collections;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +29,7 @@ class UrlValidationServiceImplTest {
   void mockRepository() {
 
     when(repository.findRulesAvailableForClient(anyString()))
-        .thenReturn(Collections.singletonList(REGEX));
+        .thenReturn(Stream.of(REGEX));
   }
 
   @Test

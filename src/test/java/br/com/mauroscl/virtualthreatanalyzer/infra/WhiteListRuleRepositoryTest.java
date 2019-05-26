@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import br.com.mauroscl.virtualthreatanalyzer.services.WhiteListRule;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ class WhiteListRuleRepositoryTest {
   @Test
   public void deveRetornarRegrasDisponiveisParaUmCliente() {
     inserirRegrasParaConsulta();
-    final List<String> rules = repository.findRulesAvailableForClient("mauro");
+    final List<String> rules = repository.findRulesAvailableForClient("mauro").collect(Collectors.toList());
     assertThat(rules.size()).isEqualTo(2);
   }
 
@@ -50,7 +51,7 @@ class WhiteListRuleRepositoryTest {
 
     repository.save(rule);
 
-    final List<String> rules = repository.findRulesAvailableForClient("joao");
+    final List<String> rules = repository.findRulesAvailableForClient("joao").collect(Collectors.toList());
 
     assertThat(rules).isEmpty();
 
