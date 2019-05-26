@@ -28,9 +28,9 @@ public class ValidationConsumer {
 
   @RabbitListener(queues = {"${vta-config.validation-queue}"},concurrency = "${vta-config.number-of-validation-consumers}")
   public void receive(ValidationCommand command) {
-    logger.info("url para validação: " + command.toString());
+    //logger.info("url para validação: " + command.toString());
     final UrlValidationResponse urlValidationResponse = urlValidationService.validar(command);
-    logger.info("resultado da validação: " + urlValidationResponse.toString());
+    //logger.info("resultado da validação: " + urlValidationResponse.toString());
     rabbitTemplate.convertAndSend(responseExchange, responseRoutingKey, urlValidationResponse);
   }
 
