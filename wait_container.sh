@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 waitforresponse() 
 {
@@ -13,4 +13,16 @@ waitforresponse()
 }
 
 waitforresponse $RABBITMQ_HOST $RABBITMQ_PORT
+
+suburl=${JDBC_URL:13}
+indiceDoisPontos=`expr index "$suburl" :`
+hostMySql=${suburl:0:$indiceDoisPontos-1}
+indiceBarra=`expr index "$suburl" /`
+portaMySql=${suburl:$indiceDoisPontos:$indiceBarra-$indiceDoisPontos-1}
+echo $hostMySql
+echo $portaMySql
+
+waitforresponse mysql 3306
+
+
 java -Dspring.profiles.active=production -jar /app.jar
