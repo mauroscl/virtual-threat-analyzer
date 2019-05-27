@@ -1,6 +1,7 @@
 package br.com.mauroscl.virtualthreatanalyzer.services;
 
 import br.com.mauroscl.virtualthreatanalyzer.infra.WhiteListRuleRepository;
+import br.com.mauroscl.virtualthreatanalyzer.model.UrlValidationResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -22,8 +23,8 @@ public class UrlValidationServiceImpl implements UrlValidationService {
   @Override
   public UrlValidationResponse validar(ValidationCommand command) {
 
-    if (!validMessage(command)) {
-      throw new AmqpRejectAndDontRequeueException("mensagem mal formatada");
+    if (!isValidMessage(command)) {
+      throw new AmqpRejectAndDontRequeueException("invalid validation command");
     }
 
     return findRule(() -> repository.findRulesAvailableForClient(command.getClient()), command)
@@ -40,7 +41,7 @@ public class UrlValidationServiceImpl implements UrlValidationService {
         .map(rule -> UrlValidationResponse.forMatch(command.getCorrelationId(), rule));
   }
 
-  boolean validMessage(ValidationCommand command) {
+  boolean isValidMessage(ValidationCommand command) {
     return command.getUrl() != null && command.getClient() != null;
   }
 

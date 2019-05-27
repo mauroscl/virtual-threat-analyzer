@@ -1,4 +1,4 @@
-package br.com.mauroscl.virtualthreatanalyzer.services;
+package br.com.mauroscl.virtualthreatanalyzer.model;
 
 public class UrlValidationResponse {
   private boolean match;

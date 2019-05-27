@@ -5,18 +5,27 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import br.com.mauroscl.virtualthreatanalyzer.infra.WhiteListRuleRepository;
+import br.com.mauroscl.virtualthreatanalyzer.model.UrlValidationResponse;
 import java.util.Collections;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 
 @ExtendWith(MockitoExtension.class)
 class UrlValidationServiceImplTest {
 
   private static final String REGEX = "[a-z]+\\.axur\\.[a-z]+";
+
 
   @InjectMocks
   private UrlValidationServiceImpl urlValidationService;
@@ -24,15 +33,12 @@ class UrlValidationServiceImplTest {
   @Mock
   private WhiteListRuleRepository repository;
 
-  @BeforeEach
-  void mockRepository() {
+  @Test
+  void deveRetornarMatchQuandoUrlEstiverNaWhiteList() {
 
     when(repository.findRulesAvailableForClient(anyString()))
         .thenReturn(Collections.singletonList(REGEX));
-  }
 
-  @Test
-  void deveRetornarMatchQuandoUrlEstiverNaWhiteList(){
     final ValidationCommand validationCommand = new ValidationCommand();
     validationCommand.setClient("mauro");
     validationCommand.setUrl("www.axur.com");
@@ -45,7 +51,7 @@ class UrlValidationServiceImplTest {
   }
 
   @Test
-  public void deveRetornarUnmatchQuandoUrlNaoEstiverNaWhiteList() {
+  void deveRetornarUnmatchQuandoUrlNaoEstiverNaWhiteList() {
     final ValidationCommand validationCommand = new ValidationCommand();
     validationCommand.setClient("mauro");
     validationCommand.setUrl("www.google.com");
@@ -55,6 +61,22 @@ class UrlValidationServiceImplTest {
     assertThat(response.getCorrelationId()).isEqualTo(1234);
     assertThat(response.isMatch()).isFalse();
     assertThat(response.getRegex()).isNull();
+  }
+
+  private static Stream<Arguments> testParams() {
+    return Stream.of(
+        Arguments.of("mauro", null),
+        Arguments.of(null, "www.axur.com") );
+  }
+
+  @ParameterizedTest()
+  @MethodSource("testParams")
+  void deveRejeitarMensagemComDadosNaoPreenchidos(String client, String url) {
+    final ValidationCommand validationCommand = new ValidationCommand();
+    validationCommand.setClient(client);
+    validationCommand.setUrl(url);
+    Assertions.assertThrows(AmqpRejectAndDontRequeueException.class,
+        () -> urlValidationService.validar(validationCommand));
   }
 
 }

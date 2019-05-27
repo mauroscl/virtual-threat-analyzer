@@ -1,5 +1,8 @@
-package br.com.mauroscl.virtualthreatanalyzer.services;
+package br.com.mauroscl.virtualthreatanalyzer.ports;
 
+import br.com.mauroscl.virtualthreatanalyzer.model.UrlValidationResponse;
+import br.com.mauroscl.virtualthreatanalyzer.services.UrlValidationService;
+import br.com.mauroscl.virtualthreatanalyzer.services.ValidationCommand;
 import java.util.logging.Logger;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

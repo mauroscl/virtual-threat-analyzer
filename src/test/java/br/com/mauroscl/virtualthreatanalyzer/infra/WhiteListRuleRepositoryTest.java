@@ -2,7 +2,7 @@ package br.com.mauroscl.virtualthreatanalyzer.infra;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import br.com.mauroscl.virtualthreatanalyzer.services.WhiteListRule;
+import br.com.mauroscl.virtualthreatanalyzer.model.WhiteListRule;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
@@ -24,12 +24,23 @@ class WhiteListRuleRepositoryTest {
   private WhiteListRuleRepository repository;
 
   @Test
-  void deveInserirRegra() {
+  void deveInserirRegraDeCliente() {
     final WhiteListRule rule = new WhiteListRule();
     rule.setClient("mauro");
     rule.setRegex("xxx");
 
-    repository.save(rule);
+    repository.saveClientRule(rule);
+
+    assertThat(rule.getId()).isNotNull();
+
+  }
+
+  @Test
+  public void deveInserirRegraGlobal() {
+    final WhiteListRule rule = new WhiteListRule();
+    rule.setRegex("xxx");
+
+    repository.saveGlobalRule(rule);
 
     assertThat(rule.getId()).isNotNull();
 

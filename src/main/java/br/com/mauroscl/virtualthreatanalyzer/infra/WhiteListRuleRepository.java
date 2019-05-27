@@ -1,6 +1,6 @@
 package br.com.mauroscl.virtualthreatanalyzer.infra;
 
-import br.com.mauroscl.virtualthreatanalyzer.services.WhiteListRule;
+import br.com.mauroscl.virtualthreatanalyzer.model.WhiteListRule;
 import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

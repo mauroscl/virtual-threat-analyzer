@@ -1,4 +1,4 @@
-package br.com.mauroscl.virtualthreatanalyzer.services;
+package br.com.mauroscl.virtualthreatanalyzer.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,6 +21,10 @@ public class WhiteListRule {
 
   public String getClient() {
     return client;
+  }
+
+  public String getRegex() {
+    return regex;
   }
 
   public void setClient(final String client) {

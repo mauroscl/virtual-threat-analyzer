@@ -1,5 +1,7 @@
-package br.com.mauroscl.virtualthreatanalyzer.services;
+package br.com.mauroscl.virtualthreatanalyzer.ports;
 
+import br.com.mauroscl.virtualthreatanalyzer.model.WhiteListRule;
+import br.com.mauroscl.virtualthreatanalyzer.services.WhiteListRuleService;
 import java.util.logging.Logger;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,6 @@ public class InsertionConsumer {
   @RabbitListener(queues = {"${vta-config.insertion-queue}"}, errorHandler = "listenerErrorHandler")
   public void receive(WhiteListRule rule) {
     logger.info("nova regra: " + rule.toString());
-    whiteListRuleService.salvar(rule);
+    whiteListRuleService.createNew(rule);
   }
 }
