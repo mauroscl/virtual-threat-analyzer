@@ -15,7 +15,7 @@ public class InsertionConsumer {
     this.whiteListRuleService = whiteListRuleService;
   }
 
-  @RabbitListener(queues = {"${vta-config.insertion-queue}"})
+  @RabbitListener(queues = {"${vta-config.insertion-queue}"}, errorHandler = "listenerErrorHandler")
   public void receive(WhiteListRule rule) {
     logger.info("nova regra: " + rule.toString());
     whiteListRuleService.salvar(rule);

@@ -1,18 +1,23 @@
 package br.com.mauroscl.virtualthreatanalyzer.config;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.api.RabbitListenerErrorHandler;
+import org.springframework.amqp.rabbit.listener.exception.ListenerExecutionFailedException;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.retry.policy.SimpleRetryPolicy;
+import org.springframework.retry.support.RetryTemplate;
 
 @Configuration
 public class RabbitConfig {
@@ -68,26 +73,29 @@ public class RabbitConfig {
     return BindingBuilder.bind(deadLetterQueue).to(deadLetterExchange).with(DEAD_LETTER_QUEUE);
   }
 
-//  @Bean
-//  SimpleMessageListenerContainer validationContainer(ConnectionFactory connectionFactory/*,
-//      MessageListenerAdapter validationListenerAdapter*/) {
-//    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-//    container.setConnectionFactory(connectionFactory);
-//    container.setQueueNames(validationQueue);
-//    //container.setConcurrentConsumers(numberOfValidationConsumers);
-//    //container.setMessageListener(validationListenerAdapter);
-//    return container;
-//  }
-
-//  @Bean
-//  MessageListenerAdapter validationListenerAdapter(ValidationConsumer validationConsumer) {
-//    return new MessageListenerAdapter(validationConsumer, "receive");
-//  }
+  @Bean
+  RabbitListenerErrorHandler listenerErrorHandler() {
+    return new RabbitListenerErrorHandler() {
+      @Override
+      public Object handleError(final Message message,
+          final org.springframework.messaging.Message<?> message1,
+          final ListenerExecutionFailedException e) {
+        throw new AmqpRejectAndDontRequeueException(e);
+      }
+    };
+  }
 
   @Bean
   public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
     final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
     rabbitTemplate.setMessageConverter(producerJackson2MessageConverter());
+
+    final SimpleRetryPolicy simpleRetryPolicy = new SimpleRetryPolicy(2);
+    final RetryTemplate retryTemplate = new RetryTemplate();
+    retryTemplate.setRetryPolicy(simpleRetryPolicy);
+
+    rabbitTemplate.setRetryTemplate(retryTemplate);
+
     return rabbitTemplate;
   }
 

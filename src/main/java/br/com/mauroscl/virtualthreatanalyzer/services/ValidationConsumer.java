@@ -26,7 +26,9 @@ public class ValidationConsumer {
     this.urlValidationService = urlValidationService;
   }
 
-  @RabbitListener(queues = {"${vta-config.validation-queue}"},concurrency = "${vta-config.number-of-validation-consumers}")
+  @RabbitListener(queues = {"${vta-config.validation-queue}"},
+      concurrency = "${vta-config.number-of-validation-consumers}",
+      errorHandler = "listenerErrorHandler")
   public void receive(ValidationCommand command) {
     logger.info("url para validação: " + command.toString());
     final UrlValidationResponse urlValidationResponse = urlValidationService.validar(command);
