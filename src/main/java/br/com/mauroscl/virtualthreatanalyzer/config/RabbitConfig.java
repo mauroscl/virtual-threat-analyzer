@@ -34,9 +34,6 @@ public class RabbitConfig {
   @Value("${vta-config.response-exchange}")
   private String responseExchange;
 
-  @Value("${vta-config.response-routing-key}")
-  private String responseRoutingKey;
-
   @Bean
   Queue deadLetterQueue() {
     return new Queue(DEAD_LETTER_QUEUE);

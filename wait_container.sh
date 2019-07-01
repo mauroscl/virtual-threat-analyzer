@@ -22,7 +22,7 @@ portaMySql=${suburl:$indiceDoisPontos:$indiceBarra-$indiceDoisPontos-1}
 echo $hostMySql
 echo $portaMySql
 
-waitforresponse mysql 3306
+waitforresponse $hostMySql $portaMySql
 
 
 java -Dspring.profiles.active=production -jar /app.jar
