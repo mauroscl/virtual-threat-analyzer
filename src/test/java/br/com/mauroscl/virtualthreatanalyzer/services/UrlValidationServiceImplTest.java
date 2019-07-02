@@ -7,7 +7,9 @@ import static org.mockito.Mockito.when;
 import br.com.mauroscl.virtualthreatanalyzer.infra.WhiteListRuleRepository;
 import br.com.mauroscl.virtualthreatanalyzer.model.UrlValidationResponse;
 import java.util.Collections;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import org.hibernate.cache.ehcache.internal.HibernateEhcacheUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
+import org.springframework.data.jpa.provider.HibernateUtils;
 
 @ExtendWith(MockitoExtension.class)
 class UrlValidationServiceImplTest {
@@ -72,6 +75,9 @@ class UrlValidationServiceImplTest {
   @ParameterizedTest()
   @MethodSource("testParams")
   void deveRejeitarMensagemComDadosNaoPreenchidos(String client, String url) {
+
+    Pattern.compile("s");
+
     final ValidationCommand validationCommand = new ValidationCommand();
     validationCommand.setClient(client);
     validationCommand.setUrl(url);

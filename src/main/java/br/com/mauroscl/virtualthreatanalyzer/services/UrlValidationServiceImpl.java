@@ -4,7 +4,9 @@ import br.com.mauroscl.virtualthreatanalyzer.infra.WhiteListRuleRepository;
 import br.com.mauroscl.virtualthreatanalyzer.model.UrlValidationResponse;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,7 @@ public class UrlValidationServiceImpl implements UrlValidationService {
 
   private Optional<UrlValidationResponse> findRule(Supplier<List<String>> supplier,
       ValidationCommand command) {
+
     return supplier.get()
         .parallelStream()
         .filter(command.getUrl()::matches).findFirst()
