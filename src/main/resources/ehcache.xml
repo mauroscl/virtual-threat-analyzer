@@ -24,9 +24,9 @@
   <cache alias="clientRules" uses-template="default-configuration">
     <key-type>java.lang.String</key-type>
     <value-type>java.util.List</value-type>
-    <expiry>
-      <ttl unit="seconds">30</ttl>
-    </expiry>
+<!--    <expiry>-->
+<!--      <ttl unit="seconds">30</ttl>-->
+<!--    </expiry>-->
 
     <resources>
       <heap unit="MB">100</heap>
@@ -36,9 +36,9 @@
 
   <cache alias="globalRules" uses-template="default-configuration">
     <value-type>java.util.List</value-type>
-    <expiry>
-      <ttl unit="seconds">30</ttl>
-    </expiry>
+<!--    <expiry>-->
+<!--      <ttl unit="seconds">30</ttl>-->
+<!--    </expiry>-->
 
     <resources>
       <heap unit="entries">1</heap>
