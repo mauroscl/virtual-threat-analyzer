@@ -15,7 +15,7 @@
 	<description>Analisador de ameaças virtuais.</description>
 
 	<properties>
-		<jackson.version>2.9.8</jackson.version>
+		<jackson.version>2.12.1</jackson.version>
 		<junit-jupiter.version>5.5.0-M1</junit-jupiter.version>
 		<mockito.version>2.27.0</mockito.version>
 	</properties>
